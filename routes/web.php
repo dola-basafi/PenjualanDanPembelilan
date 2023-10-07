@@ -52,6 +52,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/detail/{id}','detail')->name('salesDetail');
         Route::get('/edit/{id}','edit')->name('salesEdit');
         Route::post('/edit/{id}','update')->name('salesUpdate');
+        Route::delete('/delete/detail/{id}','destroySalesDetatils')->name('salesDestroyDetail');
+        Route::delete('/delete/{id}','destroy')->name('salesDestroy');
       });
     });
   });

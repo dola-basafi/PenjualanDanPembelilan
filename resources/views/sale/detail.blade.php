@@ -10,32 +10,36 @@
     <tr>
       <th>NO</th>
       <th>Name</th>
+      <th>Stock</th>
       <th>Qty</th>
       <th>Price</th>
       <th>Action</th>
     </tr>
   </thead>
   <tbody>
-    <form action="{{ route('salesUpdate',$data['id']) }}" method="post">
     @foreach ($data as $item)
-    @php
-        $a =  $item->inventory->name
-    @endphp
-{{ $a }}
-        <tr>
-          <td>{{ $loop->index + 1 }}</td>
-          <td>{{ $item->inventory->name }}</td>
-          <td>            
-              <input type="number" name="qty[$loop->index]" id="qty" value="{{ $item->qty }}">
+    
+    <tr>
+      <td>{{ $loop->index + 1 }}</td>
+      <td>{{ $item->inventory->name }}</td>
+      <td>{{ $item->inventory->stock }}</td>
+      <td>            
+            <form action="{{ route('salesUpdate',$item->id) }}" method="post">
+              @csrf
+              <input type="number" name="qty" id="qty" value="{{ $item->qty }}">
+              <button class="btn btn-info" type="submit">Update</button>
+            </form>
             </td>
             <td>{{ $item->price }}</td>
             <td>
-              <a href="{{ route('salesEdit',$item->id) }}" class="btn btn-info">Edit</a>
+              <form action="{{ route('salesDestroyDetail',$item->id) }}" method="post">
+                @csrf
+                @method('delete')
+                <button type="submit" class="btn btn-danger">Delete</button>
+              </form>
             </td>
           </tr>
           @endforeach
-          <button class="btn btn-info">Update</button>
-        </form>
   </tbody>
 </table>
 

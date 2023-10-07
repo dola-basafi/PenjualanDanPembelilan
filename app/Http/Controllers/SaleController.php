@@ -57,32 +57,21 @@ class SaleController extends Controller
     }
     function detail(Request $request ,$id){
       $sales = Sale::find($id);
-      $data = SalesDetail::with('inventory:id,name')->where('sale_id',$id)->get();
+      $data = SalesDetail::with('inventory:id,name,stock')->where('sale_id',$id)->get();
       if ($sales->user_id != $request->user()->id and $request->user()->role != 1) {
         return redirect()->back()->withErrors('anda tidak di perbolehkan mengakses data ini');
       }
-      $data['id'] = $id;
-      return view('sale.detail',compact('data'));
+            return view('sale.detail',compact('data','id'));
 
-    }
-    function edit($id,Request $request){
-      $data = SalesDetail::with('sale.user:id','inventory:id,stock')->find($id);
-      if ($data->sale->user->id != $request->user()->id and $request->user()->role != 1) {
-        return redirect()->back()->withErrors('anda tidak di perbolehkan mengakses data ini');        
-      }
-     
-      dd('test');
-    }
+    }    
 
     function update($id, Request $request){
 
-      dd($request->all());
       $data = SalesDetail::with('sale.user:id','inventory:id,stock')->find($id);
       if ($data->sale->user->id != $request->user()->id and $request->user()->role != 1) {
         return redirect()->back()->withErrors('anda tidak di perbolehkan mengakses data ini');        
       }
-      $validate = $request->validate([
-        'price' => ['required','numeric','min:1'],
+      $validate = $request->validate([        
         'qty' => ['required','numeric','min:1'],
       ] ,[
         'required' => ':attribute tidak boleh kosong',
@@ -90,7 +79,23 @@ class SaleController extends Controller
       ]);
 
       if ($validate['qty'] > $data->inventory->stock) {
-        return redirect()->route('invIndex')->withErrors('qty  tidak boleh lebih besar dari stock yang ada');
+        return redirect()->back()->withErrors('qty  tidak boleh lebih besar dari stock yang ada');
       } 
+      $data['qty'] = $validate['qty'];
+      $data->update();
+      return redirect()->back()->with('success','berhasil update data');
+    }
+
+    function destroySalesDetatils($id,Request $request){
+      $data = SalesDetail::with('sale.user:id','inventory:id,stock')->find($id);
+      if ($data->sale->user->id != $request->user()->id and $request->user()->role != 1) {
+        return redirect()->back()->withErrors('anda tidak di perbolehkan mengakses data ini');        
+      }
+      $data->delete();
+      return redirect()->back()->with('success','berhasil hapus data');
+
+    }
+    function destroy(Request $request, $id){
+      
     }
 }

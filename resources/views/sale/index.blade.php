@@ -20,7 +20,10 @@
           <td>{{ $item->date }}</td>
           <td>{{ $item->user->name }}</td>
           <td>
-            <a href="{{ route('salesDetail', $item->id) }}" class="btn btn-info">Detail</a>
+            <form action="" method="post">
+              
+              <a href="{{ route('salesDetail', $item->id) }}" class="btn btn-info">Detail</a>
+            </form>
           </td>
         </tr>
       @endforeach
