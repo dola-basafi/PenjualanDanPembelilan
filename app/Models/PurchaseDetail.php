@@ -10,7 +10,7 @@ class PurchaseDetail extends Model
 {
     use HasFactory;
 
-    protected $table = 'purchasedetails';
+    protected $table = 'purchase_details';
     public $guarded = ['id'];
 
     public function purchase():HasMany{

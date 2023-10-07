@@ -4,19 +4,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class SalesDetail extends Model
 {
     use HasFactory;
 
-    protected $table = 'salesdetails';
+    protected $table = 'sales_details';
     public $guarded = ['id'];
 
-    public function sale():HasMany{
-        return $this->hasMany(Sale::class);
+    public function sale():BelongsTo{
+        return $this->belongsTo(Sale::class);
     }
-    public function inventory():HasMany{
-        return $this->hasMany(Inventory::class);
+    public function inventory():BelongsTo{
+        return $this->belongsTo(Inventory::class);
     }
 }

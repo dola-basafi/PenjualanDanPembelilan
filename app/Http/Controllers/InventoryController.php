@@ -7,24 +7,29 @@ use Illuminate\Http\Request;
 
 class InventoryController extends Controller
 {
-  function index(){
+
+  function index($admin = "")
+  {
     $data = Inventory::all();
-    return view('inventory.index',compact('data'));
+    return view('inventory.index', compact('data','admin'));
   }
-  function edit(Request $request, $id){
+  function edit(Request $request, $id)
+  {
     $data = Inventory::find($id);
-    return view('inventory.edit',compact('data'));
+    return view('inventory.edit', compact('data'));
   }
-  function create(){
+  function create()
+  {
     return view('inventory.create');
   }
-  function store(Request $request){
+  function store(Request $request)
+  {
     $validate = $request->validate([
-      'code' => ['required','unique:inventories'],
+      'code' => ['required', 'unique:inventories'],
       'name' => ['required'],
-      'price' => ['required','numeric','min:1'],
-      'stock' => ['required','numeric','min:1']
-    ],[
+      'price' => ['required', 'numeric', 'min:1'],
+      'stock' => ['required', 'numeric', 'min:1']
+    ], [
       'required' => ':attribute tidak boleh kosong',
       'min' => ':attribute harus lebih besar dari 0',
       'unique' => ':attribute kode sudah pernah di gunakan'
@@ -33,27 +38,28 @@ class InventoryController extends Controller
 
     Inventory::create($validate);
 
-    return redirect()->route('invIndex')->with('success','berhasil menambahkan data inventory');
+    return redirect()->route('invIndex')->with('success', 'berhasil menambahkan data inventory');
   }
-  function update(Request $request,$id){
+  function update(Request $request, $id)
+  {
     $data = Inventory::find($id);
     $validate = $request->validate([
       'code' => ['required'],
       'name' => ['required'],
-      'price' => ['required','numeric','min:1'],
-      'stock' => ['required','numeric','min:1']
-    ],[
+      'price' => ['required', 'numeric', 'min:1'],
+      'stock' => ['required', 'numeric', 'min:1']
+    ], [
       'required' => ':attribute tidak boleh kosong',
       'min' => ':attribute harus lebih besar dari 0'
     ]);
 
     $data->update($validate);
-    return redirect()->route('invIndex')->with('success','berhasil menambahkan data inventory');
+    return redirect()->route('invIndex')->with('success', 'berhasil menambahkan data inventory');
   }
-  function destroy($id){
+  function destroy($id)
+  {
     $data = Inventory::find($id);
     $data->delete();
-    return redirect()->route('invIndex')->with('success','berhasil menghapus data inventory');
-
+    return redirect()->route('invIndex')->with('success', 'berhasil menghapus data inventory');
   }
 }
