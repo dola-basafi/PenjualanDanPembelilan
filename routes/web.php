@@ -66,7 +66,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/edit/{id}','update')->name('purchaseUpdate');
 
 
-        Route::delete('/delete/detail/{id}','destroyPurchaseDetatils')->name('purchaseDestroyDetail');
+        Route::delete('/delete/detail/{id}','destroyPurchasesDetatils')->name('purchaseDestroyDetail');
         Route::delete('/delete/{id}','destroy')->name('purchaseDestroy');
 
 

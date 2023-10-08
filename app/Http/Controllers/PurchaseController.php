@@ -56,7 +56,6 @@ class PurchaseController extends Controller
   function detail(Request $request, $id)
   {
     $purchase = Purchase::find($id);
-    dd($purchase);
     $data = PurchaseDetail::with('inventory:id,name,stock')->where('purchase_id', $id)->get();
     if ($purchase->user_id != $request->user()->id and $request->user()->role != 1) {
       return redirect()->back()->withErrors('anda tidak di perbolehkan mengakses data ini');
@@ -82,5 +81,24 @@ class PurchaseController extends Controller
     $data->update();
     return redirect()->back()->with('success', 'berhasil update data');
   }
-  
+  function destroyPurchasesDetatils($id, Request $request)
+  {
+    $data = PurchaseDetail::with('purchase.user:id', 'inventory:id,stock')->find($id);
+    if ($data->purchase->user->id != $request->user()->id and $request->user()->role != 1) {
+      return redirect()->back()->withErrors('anda tidak di perbolehkan mengakses data ini');
+    }
+    $data->delete();
+    return redirect()->back()->with('success', 'berhasil hapus data');
+  }
+
+  function destroy(Request $request, $id)
+  {
+    $data = Purchase::with('user')->find($id);
+    if ($data->user->id != $request->user()->id and $request->user()->role != 1) {
+      return redirect()->back()->withErrors('anda tidak di perbolehkan mengakses data ini');
+    }
+    PurchaseDetail::where('purchase_id',$id)->delete();
+    $data->delete();  
+    return redirect()->route('purchaseIndex')->with('success','data berhasil di hapus');
+  }
 }

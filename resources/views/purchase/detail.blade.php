@@ -16,7 +16,6 @@
   </thead>
   <tbody>
     @foreach ($data as $item)
-    @dd($item)
     <tr>
       <td>{{ $loop->index + 1 }}</td>
       <td>{{ $item->inventory->name }}</td>

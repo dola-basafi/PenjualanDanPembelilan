@@ -33,19 +33,39 @@
         </div>
     </nav>
     <div class="container">
-        {{-- @if ($errors->any())
-            <div class="alert alert-danger" role="alert">
-              <button type="button" class="btn-close float-end" data-bs-dismiss="alert" aria-label="Close"></button>
-                {!! implode('', $errors->all('<p>:message</p>')) !!}
-            </div>
-        @endif
-        @if (session('success'))
-            <div class="alert alert-success" role="alert">
-              <button type="button" class="btn-close float-end" data-bs-dismiss="alert" aria-label="Close"></button>
-                {{ session('success') }}
-            </div>
-        @endif --}}
+      @auth
+      <a href="{{ route('invIndex') }}" class="btn btn-info mb-2">
+        Invientory
+      </a>
 
+      
+      
+      @if ( auth()->user()->role == 1)
+      <a href="{{ route('adminSalesPurchase','sales') }}" class="btn btn-primary mb-2">
+        Sale
+      </a>
+      @endif
+      @if (auth()->user()->role == 2 or auth()->user()->role == 1 )
+      <a href="{{ route('salesIndex') }}" class="btn btn-primary mb-2">
+        List Sales
+      </a>        
+          
+      @endif
+      @if ( auth()->user()->role == 1)
+      <a href="{{ route('adminSalesPurchase','purchase') }}" class="btn btn-success mb-2">
+        Purchase
+      </a>  
+      @endif
+      @if (auth()->user()->role == 3 or auth()->user()->role == 1 )
+      <a href="{{ route('purchaseIndex') }}" class="btn btn-success mb-2">
+        List Purchase
+      </a>        
+
+      @endif
+
+      
+
+      @endauth
 
     </div>
     <script>

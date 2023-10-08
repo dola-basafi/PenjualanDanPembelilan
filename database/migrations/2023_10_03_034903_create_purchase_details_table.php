@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('purchase_details', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('qty');
+            $table->unsignedInteger('price');
             $table->unsignedBigInteger('purchase_id');
             $table->foreign('purchase_id')->references('id')->on('purchases');
             $table->unsignedBigInteger('inventory_id');
