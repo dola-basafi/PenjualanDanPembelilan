@@ -14,6 +14,10 @@ class AuthController extends Controller
         ]);
         if (Auth::attempt($validate)) {
             $request->session()->regenerate();
+
+            if (Auth::user()->role == 4) {
+              return redirect()->route('managerIndex')->with('success','anda berhasil login');
+            }
             return redirect()->route('invIndex')->with('success','anda berhasil login');
         }
         return redirect()->route('login')->withErrors('password atau email yang anda masukkan salah');

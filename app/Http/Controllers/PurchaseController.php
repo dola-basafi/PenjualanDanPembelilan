@@ -76,6 +76,9 @@ class PurchaseController extends Controller
       'min' => ':attribute harus lebih besar dari 0'
     ]);
 
+    $inventory = Inventory::find($data->inventory->id);
+    $inventory['stock'] = $inventory['stock'] + $data['qty'] - $validate['qty'];
+    $inventory->update();
     
     $data['qty'] = $validate['qty'];
     $data->update();

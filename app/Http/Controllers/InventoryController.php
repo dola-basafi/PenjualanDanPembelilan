@@ -4,12 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Models\Inventory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class InventoryController extends Controller
 {
 
   function index($admin = "")
   {
+    if(Auth::user()->role == 4){
+      return redirect()->route('managerIndex');
+    }
     $data = Inventory::all();
     return view('inventory.index', compact('data','admin'));
   }

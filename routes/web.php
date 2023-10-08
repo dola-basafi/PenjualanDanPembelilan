@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\InventoryController;
+use App\Http\Controllers\ManagerController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\SaleController;
 use Illuminate\Support\Facades\Auth;
@@ -70,6 +71,15 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/delete/{id}','destroy')->name('purchaseDestroy');
 
 
+      });
+    });
+  });
+  Route::middleware(['Role:4'])->group(function(){
+    Route::prefix('manager')->group(function(){
+      Route::controller(ManagerController::class)->group(function (){
+        Route::get('/','index')->name('managerIndex');
+        Route::get('/sales','sales')->name('managerSales');
+        Route::get('/purchases','purchases')->name('managerPurchases');
       });
     });
   });

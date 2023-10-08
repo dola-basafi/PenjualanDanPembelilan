@@ -34,9 +34,18 @@
     </nav>
     <div class="container">
       @auth
+      @if (auth()->user()->role != 4)
       <a href="{{ route('invIndex') }}" class="btn btn-info mb-2">
         Invientory
       </a>
+          
+      @endif
+      @if (auth()->user()->role == 4)
+      <div class="container m-4 text-center display-6">
+        <a href="{{ route('managerSales') }}" class="btn btn-primary">SALES</a>
+        <a href="{{ route('managerPurchases') }}" class="btn btn-info">PURCHASES</a>
+      </div>
+      @endif
 
       
       

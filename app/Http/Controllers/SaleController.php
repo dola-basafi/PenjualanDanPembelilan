@@ -83,6 +83,11 @@ class SaleController extends Controller
     if ($validate['qty'] > $data->inventory->stock) {
       return redirect()->back()->withErrors('qty  tidak boleh lebih besar dari stock yang ada');
     }
+
+    $inventory = Inventory::find($data->inventory->id);
+    $inventory['stock'] = $inventory['stock'] - $data['qty'] - $validate['qty'];
+    $inventory->update();
+
     $data['qty'] = $validate['qty'];
     $data->update();
     return redirect()->back()->with('success', 'berhasil update data');
