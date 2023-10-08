@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\InventoryController;
+use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\SaleController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -18,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-  return view('login');
+  return redirect()->route('login');
 });
 Route::get('/login', function () {
   if (Auth::check()) {
@@ -50,7 +51,6 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/create', 'store')->name('saleStore');
         Route::get('/','index')->name('salesIndex');
         Route::get('/detail/{id}','detail')->name('salesDetail');
-        Route::get('/edit/{id}','edit')->name('salesEdit');
         Route::post('/edit/{id}','update')->name('salesUpdate');
         Route::delete('/delete/detail/{id}','destroySalesDetatils')->name('salesDestroyDetail');
         Route::delete('/delete/{id}','destroy')->name('salesDestroy');
@@ -59,8 +59,17 @@ Route::middleware(['auth'])->group(function () {
   });
   Route::middleware(['Role:1,3'])->group(function () {
     Route::prefix('purchase')->group(function () {
-      Route::controller(SaleController::class)->group(function () {
+      Route::controller(PurchaseController::class)->group(function () {
         Route::post('/create', 'store')->name('purchaseStore');
+        Route::get('/','index')->name('purchaseIndex');
+        Route::get('/detail/{id}','detail')->name('purchaseDetail');
+        Route::post('/edit/{id}','update')->name('purchaseUpdate');
+
+
+        Route::delete('/delete/detail/{id}','destroyPurchaseDetatils')->name('purchaseDestroyDetail');
+        Route::delete('/delete/{id}','destroy')->name('purchaseDestroy');
+
+
       });
     });
   });

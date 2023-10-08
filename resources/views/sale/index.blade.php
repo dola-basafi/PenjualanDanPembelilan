@@ -20,9 +20,11 @@
           <td>{{ $item->date }}</td>
           <td>{{ $item->user->name }}</td>
           <td>
-            <form action="" method="post">
-              
+            <form action="{{ route('salesDestroy',$item->id) }}" method="post">
+              @csrf
+              @method('delete')
               <a href="{{ route('salesDetail', $item->id) }}" class="btn btn-info">Detail</a>
+              <button class="btn btn-danger" type="submit">Delete</button>
             </form>
           </td>
         </tr>

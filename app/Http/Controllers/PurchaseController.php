@@ -45,4 +45,42 @@ class PurchaseController extends Controller
     return redirect()->route('invIndex')->with('success','anda berhasil menjual barang');
 
   }
+  function index(Request $request){
+    if ($request->user()->role == 1) {
+      $data = Purchase::with('user:id,name')->get();
+    } else {
+      $data = Purchase::with('user:id,name')->where('user_id', $request->user()->id)->get();
+    }
+    return view('purchase.index', compact('data'));
+  }
+  function detail(Request $request, $id)
+  {
+    $purchase = Purchase::find($id);
+    dd($purchase);
+    $data = PurchaseDetail::with('inventory:id,name,stock')->where('purchase_id', $id)->get();
+    if ($purchase->user_id != $request->user()->id and $request->user()->role != 1) {
+      return redirect()->back()->withErrors('anda tidak di perbolehkan mengakses data ini');
+    }
+    return view('purchase.detail', compact('data', 'id'));
+  }
+  function update($id, Request $request)
+  {
+
+    $data = PurchaseDetail::with('purchase.user:id', 'inventory:id,stock')->find($id);
+    if ($data->purchase->user->id != $request->user()->id and $request->user()->role != 1) {
+      return redirect()->back()->withErrors('anda tidak di perbolehkan mengakses data ini');
+    }
+    $validate = $request->validate([
+      'qty' => ['required', 'numeric', 'min:1'],
+    ], [
+      'required' => ':attribute tidak boleh kosong',
+      'min' => ':attribute harus lebih besar dari 0'
+    ]);
+
+    
+    $data['qty'] = $validate['qty'];
+    $data->update();
+    return redirect()->back()->with('success', 'berhasil update data');
+  }
+  
 }

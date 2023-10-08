@@ -22,23 +22,33 @@
     </div>
   </form>
 
-
+  <a href="{{ route('invIndex') }}" class="btn btn-info mb-2">
+    Invientory
+  </a>
   @if (auth()->user()->role == 1)
     <a href="{{ route('invCreate') }}" class="btn btn-info mb-2">
       Add Data Invientory
     </a>
+    
+     
+    @endif
+    @if (auth()->user()->role == 2 or auth()->user()->role == 1)
     <a href="{{ route('adminSalesPurchase','sales') }}" class="btn btn-primary mb-2">
       Sales
     </a>
-    <a href="{{ route('adminSalesPurchase','purchase') }}" class="btn btn-success mb-2">
-      Purchase
-    </a>
-    @endif
-    @if (auth()->user()->role == 2 or auth()->user()->role == 1)
     <a href="{{ route('salesIndex') }}" class="btn btn-primary mb-2">
       List Sales
     </a>        
     @endif
+    @if (auth()->user()->role == 2 or auth()->user()->role == 1)
+    <a href="{{ route('adminSalesPurchase','purchase') }}" class="btn btn-success mb-2">
+      Purchase
+    </a>  
+    <a href="{{ route('purchaseIndex') }}" class="btn btn-success mb-2">
+      List Purchase
+    </a>        
+    @endif
+   
 
   <table id="inventory" class="table table-striped">
     <thead>
