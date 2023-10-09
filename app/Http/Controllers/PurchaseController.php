@@ -77,7 +77,7 @@ class PurchaseController extends Controller
     ]);
 
     $inventory = Inventory::find($data->inventory->id);
-    $inventory['stock'] = $inventory['stock'] + $data['qty'] - $validate['qty'];
+    $inventory['stock'] = $inventory['stock'] - $data['qty'] + $validate['qty'];
     $inventory->update();
     
     $data['qty'] = $validate['qty'];
