@@ -99,6 +99,13 @@ class SaleController extends Controller
     if ($data->sale->user->id != $request->user()->id and $request->user()->role != 1) {
       return redirect()->back()->withErrors('anda tidak di perbolehkan mengakses data ini');
     }
+
+    $inventory = Inventory::find($data->inventory->id);
+    $inventory['stock'] = $inventory['stock'] + $data['qty'];
+    
+    $inventory->update();
+
+
     $data->delete();
     return redirect()->back()->with('success', 'berhasil hapus data');
   }
@@ -108,7 +115,16 @@ class SaleController extends Controller
     if ($data->user->id != $request->user()->id and $request->user()->role != 1) {
       return redirect()->back()->withErrors('anda tidak di perbolehkan mengakses data ini');
     }
-    SalesDetail::where('sale_id',$id)->delete();
+
+    $saleDetail = SalesDetail::with('sale.user:id', 'inventory:id,stock')->where('sale_id',$id)->get();
+    foreach ($saleDetail as $item) {  
+      $inventory = Inventory::find($item->inventory->id)  ;
+      $inventory['stock'] = $inventory['stock'] + $item->qty ;
+      $inventory->update();
+    }
+    $saleDetail = SalesDetail::where('sale_id',$id);
+    
+    $saleDetail->delete();
     $data->delete();  
     return redirect()->route('salesIndex')->with('success','data berhasil di hapus');
   }

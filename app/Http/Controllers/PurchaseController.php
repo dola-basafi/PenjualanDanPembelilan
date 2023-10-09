@@ -90,6 +90,13 @@ class PurchaseController extends Controller
     if ($data->purchase->user->id != $request->user()->id and $request->user()->role != 1) {
       return redirect()->back()->withErrors('anda tidak di perbolehkan mengakses data ini');
     }
+
+    $inventory = Inventory::find($data->inventory->id);
+    $inventory['stock'] = $inventory['stock'] - $data['qty'];
+    
+    $inventory->update();
+
+
     $data->delete();
     return redirect()->back()->with('success', 'berhasil hapus data');
   }
@@ -100,7 +107,14 @@ class PurchaseController extends Controller
     if ($data->user->id != $request->user()->id and $request->user()->role != 1) {
       return redirect()->back()->withErrors('anda tidak di perbolehkan mengakses data ini');
     }
-    PurchaseDetail::where('purchase_id',$id)->delete();
+    $purchaseDetail = PurchaseDetail::with('purchase.user:id', 'inventory:id,stock')->where('purchase_id',$id)->get();
+    foreach ($purchaseDetail as $item) {  
+      $inventory = Inventory::find($item->inventory->id)  ;
+      $inventory['stock'] = $inventory['stock'] - $item->qty ;
+      $inventory->update();
+    }
+    $purchaseDetail = PurchaseDetail::where('purchase_id',$id);
+    $purchaseDetail->delete();
     $data->delete();  
     return redirect()->route('purchaseIndex')->with('success','data berhasil di hapus');
   }
